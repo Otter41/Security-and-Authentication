@@ -49,7 +49,7 @@ Use HTTPS for login and the session cookie. Amounts are stored as integer cents 
 
 - **SQL injection:** SQLite parameters are used for login, account creation and record operations. User text never gets joined into a SQL query.
 - **Input validation:** username, email, password and record fields are checked, with length limits. Text doesn't need to be destructively stripped when SQL is parameterized and HTML is encoded.
-- **Passwords:** bcrypt hashes with a per-password salt. Only the hash is stored.
+- **Passwords:** bcrypt hashes with a per-password salt. Only the hash is stored. Registration accepts passwords of at least 12 characters and at most 72 UTF-8 bytes, so bcrypt can't silently truncate them.
 - **Authentication and RBAC:** an HTTPS-only, HttpOnly, SameSite=Strict session cookie. Normal users can't open admin routes or grant themselves the Admin role.
 - **XSS:** user text rendered as HTML is encoded; JSON responses stay JSON. Security headers include a strict Content Security Policy.
 - **Tests:** registration, password hashing, SQL injection attempts, script input, HTML encoding, user/admin access, logout, duplicate email and record ownership.
