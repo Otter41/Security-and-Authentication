@@ -1,0 +1,9 @@
+bin/
+obj/
+.vs/
+TestResults/
+*.db
+*.db-shm
+*.db-wal
+.env
+*.user
