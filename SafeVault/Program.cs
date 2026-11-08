@@ -1,5 +1,6 @@
 using System.Net.Mail;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authentication;
@@ -70,8 +71,10 @@ app.MapPost("/register", (RegisterRequest request, VaultStore store) =>
         !MailAddress.TryCreate(email, out var parsed) || parsed.Address != email)
         return Results.BadRequest(new { error = "Invalid email address." });
 
-    if (request.Password is null || request.Password.Length is < 12 or > 128)
-        return Results.BadRequest(new { error = "Password must be 12-128 characters." });
+    // bcrypt only uses the first 72 UTF-8 bytes, so reject longer passwords.
+    if (request.Password is null || request.Password.Length < 12 ||
+        Encoding.UTF8.GetByteCount(request.Password) > 72)
+        return Results.BadRequest(new { error = "Password must be at least 12 characters and at most 72 UTF-8 bytes." });
 
     // bcrypt salts and hashes the password. No plaintext password goes into SQLite.
     var hash = BCrypt.Net.BCrypt.HashPassword(request.Password, workFactor: 11);
@@ -84,7 +87,8 @@ app.MapPost("/register", (RegisterRequest request, VaultStore store) =>
 
 app.MapPost("/login", async (LoginRequest request, VaultStore store, HttpContext context) =>
 {
-    if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrEmpty(request.Password))
+    if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrEmpty(request.Password) ||
+        Encoding.UTF8.GetByteCount(request.Password) > 72)
         return Results.BadRequest(new { error = "Username and password are required." });
 
     var user = store.FindByUsername(request.Username.Trim());
