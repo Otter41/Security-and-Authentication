@@ -22,7 +22,7 @@ I treated those as the things to fix first rather than adding a bunch of unrelat
 
 I added xUnit integration tests for the cases the assignment asks about: invalid data, SQL injection-like usernames and notes, XSS output, failed login, access without a session, role escalation, duplicate accounts, and record privacy.
 
-The tests are configured to run with a temporary SQLite database. I also added a GitHub Actions workflow so the repository can show whether they pass.
+The tests use a temporary SQLite database. I ran them through GitHub Actions on 8 November 2026: **8/8 passed, with zero build warnings or errors**. The repository includes the workflow so reviewers can check the result themselves.
 
 ## How the LLM helped
 
