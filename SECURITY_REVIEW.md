@@ -20,9 +20,9 @@ I treated those as the things to fix first rather than adding a bunch of unrelat
 
 ## Tests and debugging
 
-I added xUnit integration tests for the cases the assignment asks about: invalid data, SQL injection-like usernames and notes, XSS output, failed login, access without a session, role escalation, duplicate accounts, and record privacy.
+I added xUnit integration tests for the cases the assignment asks about: invalid data, SQL injection-like usernames and notes, XSS output, failed login, access without a session, role escalation, duplicate accounts, bcrypt's 72-byte password limit, and record privacy.
 
-The tests use a temporary SQLite database. I ran them through GitHub Actions on 8 November 2026: **8/8 passed, with zero build warnings or errors**. The repository includes the workflow so reviewers can check the result themselves.
+The tests use a temporary SQLite database. I ran them through GitHub Actions on 8 November 2026: **9/9 passed, with zero build warnings or errors**. The repository includes the workflow so reviewers can check the result themselves.
 
 ## How the LLM helped
 
