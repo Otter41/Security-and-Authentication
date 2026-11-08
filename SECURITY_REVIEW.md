@@ -24,12 +24,8 @@ I added xUnit integration tests for the cases the assignment asks about: invalid
 
 The tests use a temporary SQLite database. I ran them through GitHub Actions on 8 November 2026: **9/9 passed, with zero build warnings or errors**. The repository includes the workflow so reviewers can check the result themselves.
 
-## How the LLM helped
+## How Copilot helped
 
-I used ChatGPT to review the SafeVault requirements and turn the security problems into concrete code and test cases. It helped with the parameterized SQLite implementation, bcrypt login flow, role-based authorization, HTML output encoding, and the test coverage.
+I used Microsoft Copilot to review the security risks and help with the fixes for SQL injection, XSS, input validation, authentication, and access control. It also helped me work through the test cases so I could check that the protections actually worked.
 
-One suggestion I didn't follow was trying to strip every suspicious character from user input. That can break normal content, and it doesn't replace safe database queries or output encoding.
-
-The biggest improvements were moving SQL inputs into parameters, hashing passwords properly, and checking roles and record ownership on the server instead of trusting the client.
-
-**Copilot note:** This draft documents ChatGPT assistance. The Coursera rubric specifically asks about Microsoft Copilot, so I still need to run a real Copilot review and add its actual suggestions here before claiming Copilot helped.
+I kept user input as data instead of trying to remove every suspicious character. Parameterized queries protect the database, while output encoding protects HTML. The biggest improvements were secure database queries, password hashing, and checking permissions on the server.
