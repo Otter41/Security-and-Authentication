@@ -206,6 +206,38 @@ public class SecurityTests
     }
 
     [Fact]
+    public async Task LongBcryptPasswordsAreRejectedInsteadOfSilentlyTruncated()
+    {
+        using var app = new TestApp();
+        using var client = app.NewClient();
+
+        var tooLong = await client.PostAsJsonAsync("/register", new
+        {
+            username = "longpass",
+            email = "longpass@example.com",
+            password = new string('x', 73)
+        });
+        Assert.Equal(HttpStatusCode.BadRequest, tooLong.StatusCode);
+
+        var exactLimit = new string('p', 72);
+        var allowed = await client.PostAsJsonAsync("/register", new
+        {
+            username = "validpass",
+            email = "validpass@example.com",
+            password = exactLimit
+        });
+        Assert.Equal(HttpStatusCode.Created, allowed.StatusCode);
+
+        // A password with extra bytes must not work as an alias of the 72-byte one.
+        var attempt = await client.PostAsJsonAsync("/login", new
+        {
+            username = "validpass",
+            password = exactLimit + "extra"
+        });
+        Assert.Equal(HttpStatusCode.BadRequest, attempt.StatusCode);
+    }
+
+    [Fact]
     public async Task DuplicateEmailCannotBeRegisteredTwice()
     {
         using var app = new TestApp();
